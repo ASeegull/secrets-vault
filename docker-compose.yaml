@@ -1,0 +1,16 @@
+version: '2'
+services:
+  # secrets-server:
+  #   image: secrets-server:develop
+  #   ports:
+  #     - "5000:5000"
+  #   depends_on:
+  #     - postgres
+
+  postgres:
+    image: postgres:9.4-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./env/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+      - ./var:/var/lib/postgresql/data
