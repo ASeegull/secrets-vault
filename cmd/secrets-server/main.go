@@ -13,6 +13,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/ASeegull/secrets-vault/api"
+	"github.com/ASeegull/secrets-vault/cleanup"
 	"github.com/ASeegull/secrets-vault/env"
 	"github.com/ASeegull/secrets-vault/storage"
 	"github.com/ASeegull/secrets-vault/storage/migrations"
@@ -43,6 +44,7 @@ func main() {
 	}
 
 	srv := api.New(st, cfg.HOST, cfg.PORT)
+	srv.Cleaner = cleanup.New(st, "@daily")
 
 	go func() {
 		if err := srv.ListenAndServe(); err != http.ErrServerClosed {

@@ -28,7 +28,7 @@ func respJSON(msg interface{}, w http.ResponseWriter, code int) {
 	}
 }
 
-func (a API) getSecret(w http.ResponseWriter, r *http.Request) {
+func (a *API) getSecret(w http.ResponseWriter, r *http.Request) {
 	hash, err := uuid.FromString(chi.URLParam(r, "hash"))
 	if err != nil {
 		respJSON(errResp{Message: "Missing secret's hash"}, w, http.StatusBadRequest)
@@ -54,7 +54,7 @@ func (a API) getSecret(w http.ResponseWriter, r *http.Request) {
 	respJSON(secret, w, http.StatusOK)
 }
 
-func (a API) addSecret(w http.ResponseWriter, r *http.Request) {
+func (a *API) addSecret(w http.ResponseWriter, r *http.Request) {
 	msg := r.FormValue("message")
 	if msg == "" {
 		respJSON(errResp{Message: "Please, add secret to store"}, w, http.StatusBadRequest)
@@ -82,7 +82,7 @@ func (a API) addSecret(w http.ResponseWriter, r *http.Request) {
 
 	hash, err := uuid.NewV4()
 	if err != nil || viewsAllowed == 0 {
-		log.Warn("Failed to save secret", "could not create uuid:", err.Error())
+		log.Warn("Failed to save secret: ", "could not create uuid: ", err.Error())
 		respJSON(errResp{Message: "Failed to save secret"}, w, http.StatusBadRequest)
 		return
 	}

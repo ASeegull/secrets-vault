@@ -2,7 +2,6 @@ package storage
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/ASeegull/secrets-vault/models"
@@ -61,9 +60,8 @@ func (db DB) Delete(uuid.UUID) error {
 	return nil
 }
 
-func (db DB) ClearExpired() error {
+func (db DB) ClearExpired() (string, error) {
 	now := time.Now()
 	res, err := db.Conn.Exec("DELETE from secrets WHERE expireAfterViews = 0 OR (expireAfter < ? AND expiredAfter NOT NULL)", now)
-	log.Println("Deleted res", res)
-	return err
+	return fmt.Sprintf("Executing clenup job result: %v", res), err
 }
